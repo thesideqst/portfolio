@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+@theme {
+  --color-night: #0b0a1f;
+  --color-night-2: #161330;
+  --color-night-3: #221c40;
+  --color-bone: #ede6da;
+  --color-ash: #9a93b8;
+  --color-line: #2e2850;
+  --color-marigold: #e8a33d;
+  --color-marigold-soft: #e8a33d26;
+  --color-rose: #d9707e;
+
+  /* shadcn token names, used by components pulled from 21st.dev */
+  --color-background: #0b0a1f;
+  --color-foreground: #ede6da;
+  --color-muted: #221c40;
+  --color-muted-foreground: #9a93b8;
+
+  --font-display: "Metamorphous", Georgia, serif;
+  --font-sans: "Switzer", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  background: var(--color-night);
+  color: var(--color-bone);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--color-night);
+}
+
+::selection { background: var(--color-marigold); color: var(--color-night); }
+
+:focus-visible {
+  outline: 2px solid var(--color-marigold);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+
