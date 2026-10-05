@@ -15,7 +15,7 @@ export const links = {
   instagram: 'https://www.instagram.com/lifeofaliya/',
   instagramHandle: 'lifeofaliya',
   // TODO: swap for Aliya's Fora advisor profile URL once she shares it.
-  fora: 'mailto:aliyareneekhan@gmail.com?subject=Planning%20a%20trip',
+  fora: 'mailto:aliya.khan@fora.travel?subject=Planning%20a%20trip',
 }
 
 /** Mirrors the bio on instagram.com/lifeofaliya. Update when she changes it there. */
@@ -190,10 +190,10 @@ export const stylists: Stylist[] = [
   },
 ]
 
-/** Mirorra calls to action. TODO: replace with the real beta form and support page. */
+/** Mirorra calls to action. The beta form on /mirorra emails signups to `betaEmail`. */
 export const mirorraLinks = {
-  beta: 'mailto:aliyareneekhan@gmail.com?subject=Mirorra%20beta%20testing',
-  support: 'mailto:aliyareneekhan@gmail.com?subject=Supporting%20Mirorra',
+  beta: '/mirorra#beta',
+  betaEmail: 'aliyareneekhan@gmail.com',
 }
 
 export type Playlist = {

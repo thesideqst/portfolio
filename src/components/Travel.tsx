@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import RotatingEarth, { type Tier } from '@/components/ui/wireframe-dotted-globe'
 import { loadGeo } from '@/lib/geo'
 import { travel } from '@/content'
+import { sendForm } from '@/lib/formsubmit'
 
 const ease = [0.16, 1, 0.3, 1] as const
 
@@ -247,23 +248,8 @@ function TripRequestForm({ trip, setTrip }: { trip: string[]; setTrip: (f: (t: s
     }
 
     setStatus('sending')
-    try {
-      const res = await fetch(`https://formsubmit.co/ajax/${travel.email}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          ...data,
-          _subject: `Trip request: ${data.destinations || 'somewhere new'}`,
-          _replyto: data.email,
-          _template: 'table',
-          _captcha: 'false',
-        }),
-      })
-      const json = res.ok ? await res.json().catch(() => null) : null
-      setStatus(json?.success === 'true' || json?.success === true ? 'sent' : 'error')
-    } catch {
-      setStatus('error')
-    }
+    const ok = await sendForm(travel.email, `Trip request: ${data.destinations || 'somewhere new'}`, data, data.email)
+    setStatus(ok ? 'sent' : 'error')
   }
 
   if (status === 'sent') {
