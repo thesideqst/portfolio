@@ -47,7 +47,7 @@ export function Contact() {
         <p className="max-w-xl text-[1.05rem] text-bone/80">If you made it all the way down here, thank you, and I’d love to hear from you.</p>
         <a
           href={`mailto:${links.email}`}
-          className="group mt-6 block font-display text-[clamp(1.5rem,5.4vw,4.25rem)] font-light leading-none tracking-tight [overflow-wrap:anywhere]"
+          className="group mt-6 block font-display text-[clamp(1.25rem,3.2vw,2.5rem)] font-light leading-none tracking-tight [overflow-wrap:anywhere]"
         >
           <span className="bg-[linear-gradient(var(--color-marigold),var(--color-marigold))] bg-[length:0%_2px] bg-left-bottom bg-no-repeat pb-1 transition-[background-size] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:bg-[length:100%_2px]">
             {links.email}
