@@ -55,8 +55,8 @@ const OPTIONS: { mode: SkyMode; label: string; icon: React.ReactNode }[] = [
   },
 ]
 
-/** Switch between the two skies. */
-export function SkyToggle({ className = '' }: { className?: string }) {
+/** Switch between the two skies. `compact` drops the labels on phones, leaving the icons. */
+export function SkyToggle({ className = '', compact = false }: { className?: string; compact?: boolean }) {
   const mode = useSkyMode()
   return (
     <div role="radiogroup" aria-label="Background" className={`flex gap-0.5 rounded-full bg-night-2/80 p-1 ring-1 ring-line backdrop-blur-md ${className}`}>
@@ -65,13 +65,14 @@ export function SkyToggle({ className = '' }: { className?: string }) {
           key={o.mode}
           role="radio"
           aria-checked={mode === o.mode}
+          aria-label={o.label}
           onClick={() => setSkyMode(o.mode)}
           className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs transition ${
             mode === o.mode ? 'bg-bone text-night' : 'text-ash hover:text-bone'
           }`}
         >
           {o.icon}
-          {o.label}
+          <span className={compact ? 'hidden sm:inline' : undefined}>{o.label}</span>
         </button>
       ))}
     </div>

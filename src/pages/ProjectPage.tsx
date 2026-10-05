@@ -15,12 +15,13 @@ export function ProjectPage({ children }: { children: ReactNode }) {
     <>
       <header className="fixed inset-x-0 top-0 z-30 bg-gradient-to-b from-night via-night/80 to-transparent">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-5 sm:px-8">
-          <Link to="/" className="group flex items-center gap-2 text-sm text-bone/85 hover:text-bone">
-            <span aria-hidden className="transition-transform group-hover:-translate-x-1">←</span> All work
+          <Link to="/" aria-label="All work" className="group flex shrink-0 items-center gap-2 text-sm text-bone/85 hover:text-bone">
+            <span aria-hidden className="text-lg transition-transform group-hover:-translate-x-1 sm:text-sm">←</span>
+            <span className="hidden sm:inline">All work</span>
           </Link>
-          <div className="flex items-center gap-4">
-            <Link to="/" className="font-display text-lg font-light text-bone">{profile.name}</Link>
-            <SkyToggle />
+          <div className="flex min-w-0 items-center gap-3 sm:gap-4">
+            <Link to="/" className="truncate whitespace-nowrap font-display text-lg font-light text-bone">{profile.name}</Link>
+            <SkyToggle compact />
           </div>
         </div>
       </header>
