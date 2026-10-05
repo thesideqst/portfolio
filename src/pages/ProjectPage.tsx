@@ -7,7 +7,8 @@ import { profile } from '@/content'
 /** Shell for each project's in-depth page: a way back to the wheel, the content, and contact. */
 export function ProjectPage({ children }: { children: ReactNode }) {
   useEffect(() => {
-    window.scrollTo(0, 0)
+    // A link to a spot on the page (e.g. /mirorra#beta) scrolls there itself.
+    if (!window.location.hash) window.scrollTo(0, 0)
   }, [])
 
   return (

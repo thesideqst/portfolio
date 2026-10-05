@@ -72,14 +72,9 @@ function Summary({ project, onClose }: { project: Project; onClose: () => void }
           <div className="mt-7 flex flex-wrap items-center gap-3">
             <MoreLink project={project} />
             {project.slug === 'mirorra' && (
-              <>
-                <a href={mirorraLinks.beta} className="rounded-full px-5 py-2.5 text-sm ring-1 ring-marigold/60 transition hover:bg-marigold hover:text-night">
-                  Join the beta
-                </a>
-                <a href={mirorraLinks.support} className="rounded-full px-5 py-2.5 text-sm text-ash ring-1 ring-line transition hover:text-bone">
-                  Support us
-                </a>
-              </>
+              <Link to={mirorraLinks.beta} className="rounded-full px-5 py-2.5 text-sm ring-1 ring-marigold/60 transition hover:bg-marigold hover:text-night">
+                Join the beta
+              </Link>
             )}
           </div>
         </div>

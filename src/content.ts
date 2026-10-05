@@ -15,7 +15,7 @@ export const links = {
   instagram: 'https://www.instagram.com/lifeofaliya/',
   instagramHandle: 'lifeofaliya',
   // TODO: swap for Aliya's Fora advisor profile URL once she shares it.
-  fora: 'mailto:aliyareneekhan@gmail.com?subject=Planning%20a%20trip',
+  fora: 'mailto:aliya.khan@fora.travel?subject=Planning%20a%20trip',
 }
 
 /** Mirrors the bio on instagram.com/lifeofaliya. Update when she changes it there. */
@@ -190,10 +190,10 @@ export const stylists: Stylist[] = [
   },
 ]
 
-/** Mirorra calls to action. TODO: replace with the real beta form and support page. */
+/** Mirorra calls to action. The beta form on /mirorra emails signups to `betaEmail`. */
 export const mirorraLinks = {
-  beta: 'mailto:aliyareneekhan@gmail.com?subject=Mirorra%20beta%20testing',
-  support: 'mailto:aliyareneekhan@gmail.com?subject=Supporting%20Mirorra',
+  beta: '/mirorra#beta',
+  betaEmail: 'aliyareneekhan@gmail.com',
 }
 
 export type Playlist = {
@@ -295,7 +295,7 @@ export const projects: Project[] = [
 export const travel = {
   // Trip requests post to FormSubmit, which emails them on to `email` below. No account needed;
   // the very first request triggers a one-time "activate this form" email that has to be clicked.
-  email: 'aliyareneekhan@gmail.com',
+  email: 'aliya.khan@fora.travel',
   /** Countries where Aliya has planned trips for clients. */
   client: { '380': 'Italy', '300': 'Greece', '392': 'Japan' } as Record<string, string>,
   /** Countries Aliya has traveled to herself. */
