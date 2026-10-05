@@ -30,6 +30,11 @@ html {
   -webkit-font-smoothing: antialiased;
 }
 
+/* The homepage wheel fills the screen and handles the scroll wheel itself. */
+@media (min-width: 40rem) {
+  html.wheel-page { overflow: hidden; }
+}
+
 body {
   margin: 0;
   font-family: var(--font-sans);

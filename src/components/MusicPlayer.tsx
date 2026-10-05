@@ -329,10 +329,12 @@ export function MusicPlayer() {
         <button
           onClick={toggle}
           aria-expanded={open}
-          className="flex items-center gap-2.5 rounded-full bg-night-2/80 py-2 pl-3 pr-4 text-sm ring-1 ring-line backdrop-blur-md transition hover:ring-marigold/50"
+          className="flex items-center gap-2.5 rounded-full bg-night-2/80 p-3 text-sm ring-1 ring-line backdrop-blur-md transition hover:ring-marigold/50 sm:py-2 sm:pl-3 sm:pr-4"
         >
           <Bars on={playing} />
-          <span className="relative block h-5 w-[min(13rem,calc(100vw-9rem))] overflow-hidden text-left text-bone/90">
+          {/* Phones get just the bars, so the player doesn't sit on top of the page. */}
+          <span className="sr-only sm:hidden">{open ? 'Close' : 'What I’m listening to, reading and watching'}</span>
+          <span aria-hidden className="relative hidden h-5 w-[min(13rem,calc(100vw-9rem))] overflow-hidden text-left text-bone/90 sm:block">
             <AnimatePresence mode="popLayout" initial={false}>
               <motion.span
                 key={open ? 'close' : playing && current ? `p-${current.name}` : TICKER[tick % TICKER.length]}

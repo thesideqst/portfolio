@@ -43,7 +43,7 @@ export function Background() {
 export function Contact() {
   return (
     <footer id="contact" className="border-t border-line">
-      <div className="mx-auto max-w-6xl px-4 pb-14 pt-28 sm:px-8">
+      <div className="mx-auto max-w-6xl px-4 pb-24 pt-28 sm:px-8 sm:pb-14">
         <p className="max-w-xl text-[1.05rem] text-bone/80">If you made it all the way down here, thank you, and I’d love to hear from you.</p>
         <a
           href={`mailto:${links.email}`}
