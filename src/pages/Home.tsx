@@ -4,6 +4,7 @@ import { Link } from 'react-router'
 import { AnimatePresence, motion } from 'motion/react'
 import { WorksWheel } from '@/components/ui/works-wheel'
 import { FlightCaption, SkyToggle } from '@/components/Sky'
+import { preloadPage } from '@/pages/lazy'
 import { instagramProfile, links, mirorraLinks, profile, projects, type Project } from '@/content'
 
 const ease = [0.16, 1, 0.3, 1] as const
@@ -25,6 +26,8 @@ function MoreLink({ project }: { project: Project }) {
 }
 
 function Summary({ project, onClose }: { project: Project; onClose: () => void }) {
+  useEffect(() => preloadPage(project.more.href), [project])
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
     window.addEventListener('keydown', onKey)

@@ -71,7 +71,7 @@ export default function RotatingEarth({ tiers, pins, selectedCountry, focus, onP
 
     const resize = () => {
       size = wrap.clientWidth
-      const dpr = window.devicePixelRatio || 1
+      const dpr = Math.min(window.devicePixelRatio || 1, 2)
       canvas.width = size * dpr
       canvas.height = size * dpr
       canvas.style.width = `${size}px`
@@ -176,7 +176,15 @@ export default function RotatingEarth({ tiers, pins, selectedCountry, focus, onP
       }
     }
 
+    // Only spin while the globe is on screen; scrolled away, it costs nothing.
+    let onScreen = true
+    const io = new IntersectionObserver(([entry]) => {
+      onScreen = entry.isIntersecting
+    })
+    io.observe(wrap)
+
     const timer = d3.timer(() => {
+      if (!onScreen) return
       const now = performance.now()
       if (target) {
         const dLng = ((target[0] - rotation[0] + 540) % 360) - 180
@@ -285,6 +293,7 @@ export default function RotatingEarth({ tiers, pins, selectedCountry, focus, onP
 
     return () => {
       timer.stop()
+      io.disconnect()
       ro.disconnect()
       canvas.removeEventListener('pointerdown', onDown)
       canvas.removeEventListener('pointermove', onMove)
