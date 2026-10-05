@@ -295,7 +295,7 @@ export const projects: Project[] = [
 export const travel = {
   // Trip requests post to FormSubmit, which emails them on to `email` below. No account needed;
   // the very first request triggers a one-time "activate this form" email that has to be clicked.
-  email: 'aliyareneekhan@gmail.com',
+  email: 'aliya.khan@fora.travel',
   /** Countries where Aliya has planned trips for clients. */
   client: { '380': 'Italy', '300': 'Greece', '392': 'Japan' } as Record<string, string>,
   /** Countries Aliya has traveled to herself. */
