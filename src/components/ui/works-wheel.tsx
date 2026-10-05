@@ -191,6 +191,8 @@ export function WorksWheel({
   React.useEffect(() => {
     if (!stage.h) return;
     let frame = 0;
+    // NaN so the first frame after (re)measuring always writes.
+    let drawn = NaN;
     const { ringR, ringScale, drumR, bow } = metrics;
 
     const draw = () => {
@@ -200,6 +202,10 @@ export function WorksWheel({
       else turn.current += gap * (reduced ? 1 : EASE);
 
       const t = turn.current;
+      // At rest nothing has moved, so leave the DOM alone rather than rewriting
+      // every card's transform (and making the browser recheck them) each frame.
+      if (t === drawn) return;
+      drawn = t;
       const m = clamp(t, 0, 1);
       const pos = Math.max(0, t - 1);
 

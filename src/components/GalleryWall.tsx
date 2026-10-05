@@ -1,6 +1,6 @@
-import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore, type CSSProperties, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore, type CSSProperties, type ReactNode } from 'react'
 import * as d3 from 'd3'
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import { AnimatePresence, motion, useInView, useReducedMotion } from 'motion/react'
 import { bookshelf, travel } from '@/content'
 import { loadGeo } from '@/lib/geo'
 import { photos, thumbSrc } from '@/photos'
@@ -208,10 +208,21 @@ const useSomethingNearby = () =>
     () => presence.count > 0,
   )
 
+/** Whether the wall is on screen. Its looping animations (flames, swaying ghosts, the
+    humming medallion) stop while it's scrolled away, so they don't cost anything there. */
+const OnScreen = createContext(true)
+
+/** True when looping animations should hold still: reduced motion, or the wall is off screen. */
+function useStill() {
+  const onScreen = useContext(OnScreen)
+  const reduce = useReducedMotion()
+  return !!reduce || !onScreen
+}
+
 /** A School of the Wolf medallion on a nail. Like Geralt's, it hums when something's nearby. */
 function Medallion() {
   const humming = useSomethingNearby()
-  const reduce = useReducedMotion()
+  const still = useStill()
   const [on, setOn] = useState(false)
   const id = useId()
   return (
@@ -225,7 +236,7 @@ function Medallion() {
         viewBox="0 0 40 74"
         className="absolute inset-0 h-full w-full overflow-visible"
         style={{ transformOrigin: '50% 3%', filter: 'drop-shadow(0 0.4cqw 0.5cqw rgba(0,0,0,0.7))' }}
-        animate={humming && !reduce ? { rotate: [0, -2.5, 2.5, -2, 2, 0], x: [0, -0.4, 0.4, -0.3, 0.3, 0] } : { rotate: 0, x: 0 }}
+        animate={humming && !still ? { rotate: [0, -2.5, 2.5, -2, 2, 0], x: [0, -0.4, 0.4, -0.3, 0.3, 0] } : { rotate: 0, x: 0 }}
         transition={humming ? { duration: 0.35, repeat: Infinity, repeatDelay: 0.15 } : { duration: 0.4 }}
       >
         <defs>
@@ -292,7 +303,7 @@ function useHaunting(offset: number, held: { current: boolean }) {
 
 function Ghost({ who, box }: { who: number | null; box: string }) {
   const id = useId()
-  const reduce = useReducedMotion()
+  const still = useStill()
   const [x, y, width, height] = box.split(' ').map(Number)
   return (
     <AnimatePresence>
@@ -324,8 +335,8 @@ function Ghost({ who, box }: { who: number | null; box: string }) {
               stroke="#060508"
               filter={`url(#${id}f)`}
               style={{ transformBox: 'fill-box', transformOrigin: '50% 100%' }}
-              animate={reduce ? undefined : { rotate: [-1.6, 1.6, -1.6], y: [0, -0.8, 0] }}
-              transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+              animate={still ? { rotate: 0, y: 0 } : { rotate: [-1.6, 1.6, -1.6], y: [0, -0.8, 0] }}
+              transition={still ? { duration: 0.3 } : { duration: 5, repeat: Infinity, ease: 'easeInOut' }}
             >
               {ghosts[who]}
             </motion.g>
@@ -432,7 +443,7 @@ function GothicArch({ who }: { who: number | null }) {
 }
 
 function Flame({ size = 1 }: { size?: number }) {
-  const reduce = useReducedMotion()
+  const still = useStill()
   return (
     <motion.span
       className="absolute bottom-full left-1/2 block -translate-x-1/2 rounded-[50%_50%_50%_50%/60%_60%_40%_40%]"
@@ -440,11 +451,10 @@ function Flame({ size = 1 }: { size?: number }) {
         width: `${0.9 * size}cqw`,
         height: `${1.9 * size}cqw`,
         background: 'radial-gradient(ellipse at 50% 70%, #fff6d8 0%, #ffd27a 35%, #ff9a3c 70%, rgba(255,120,40,0) 100%)',
-        filter: 'blur(0.05cqw)',
         transformOrigin: '50% 100%',
       }}
-      animate={reduce ? undefined : { scaleY: [1, 1.12, 0.94, 1.06, 1], scaleX: [1, 0.94, 1.04, 0.97, 1], opacity: [0.95, 1, 0.88, 1, 0.95] }}
-      transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+      animate={still ? { scaleY: 1, scaleX: 1, opacity: 0.95 } : { scaleY: [1, 1.12, 0.94, 1.06, 1], scaleX: [1, 0.94, 1.04, 0.97, 1], opacity: [0.95, 1, 0.88, 1, 0.95] }}
+      transition={still ? { duration: 0.3 } : { duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
     />
   )
 }
@@ -687,75 +697,79 @@ function Credenza() {
 }
 
 export function GalleryWall({ onOpen }: { onOpen: (index: number) => void }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const onScreen = useInView(ref, { margin: '200px 0px' })
   return (
-    <div className="@container mt-12">
-      <div
-        className="relative overflow-hidden rounded-[2rem] ring-1 ring-black/60 [--s:2.25] md:[--s:1] md:h-[calc(64*1cqw)]"
-        style={{
-          background: `radial-gradient(ellipse 70% 55% at 50% 35%, rgba(120,60,70,0.18), transparent 75%), radial-gradient(ellipse 120% 90% at 50% 50%, transparent 55%, rgba(0,0,0,0.6)), ${damask}, linear-gradient(180deg, #221a1f, #171215 70%, #0f0b0d)`,
-          backgroundSize: 'auto, auto, 6cqw 9cqw, auto',
-        }}
-      >
-        {/* Crown moulding. */}
-        <div aria-hidden className="absolute inset-x-0 top-0 h-[1.2cqw] md:h-[1.1cqw]" style={{ background: 'linear-gradient(180deg, #2f2427, #120d0f)', boxShadow: '0 0.3cqw 0.6cqw rgba(0,0,0,0.5)' }} />
-        <div className="flex flex-wrap items-center justify-center gap-[5cqw] px-[4cqw] pb-[38cqw] pt-[8cqw] md:block md:p-0">
-          {pieces.map((p, n) => {
-            const box: CSSProperties = {
-              ['--x' as string]: p.x,
-              ['--y' as string]: p.y,
-              width: u(p.w),
-              height: u(p.h),
-            }
-            const place = 'relative shrink-0 md:absolute md:left-[calc(var(--x)*1cqw)] md:top-[calc(var(--y)*1cqw)]'
-            const anim = {
-              initial: { opacity: 0, y: 14 },
-              whileInView: { opacity: 1, y: 0 },
-              viewport: { once: true, margin: '-5% 0px' },
-              transition: { delay: (n % 5) * 0.06, duration: 0.8, ease: [0.16, 1, 0.3, 1] as const },
-            }
-            if (p.kind === 'photo') {
-              const index = photos.findIndex((ph) => ph.id === p.id)
-              const ph = photos[index]
-              if (!ph) return null
+    <OnScreen.Provider value={onScreen}>
+      <div ref={ref} className="@container mt-12">
+        <div
+          className="relative overflow-hidden rounded-[2rem] ring-1 ring-black/60 [--s:2.25] md:[--s:1] md:h-[calc(64*1cqw)]"
+          style={{
+            background: `radial-gradient(ellipse 70% 55% at 50% 35%, rgba(120,60,70,0.18), transparent 75%), radial-gradient(ellipse 120% 90% at 50% 50%, transparent 55%, rgba(0,0,0,0.6)), ${damask}, linear-gradient(180deg, #221a1f, #171215 70%, #0f0b0d)`,
+            backgroundSize: 'auto, auto, 6cqw 9cqw, auto',
+          }}
+        >
+          {/* Crown moulding. */}
+          <div aria-hidden className="absolute inset-x-0 top-0 h-[1.2cqw] md:h-[1.1cqw]" style={{ background: 'linear-gradient(180deg, #2f2427, #120d0f)', boxShadow: '0 0.3cqw 0.6cqw rgba(0,0,0,0.5)' }} />
+          <div className="flex flex-wrap items-center justify-center gap-[5cqw] px-[4cqw] pb-[38cqw] pt-[8cqw] md:block md:p-0">
+            {pieces.map((p, n) => {
+              const box: CSSProperties = {
+                ['--x' as string]: p.x,
+                ['--y' as string]: p.y,
+                width: u(p.w),
+                height: u(p.h),
+              }
+              const place = 'relative shrink-0 md:absolute md:left-[calc(var(--x)*1cqw)] md:top-[calc(var(--y)*1cqw)]'
+              const anim = {
+                initial: { opacity: 0, y: 14 },
+                whileInView: { opacity: 1, y: 0 },
+                viewport: { once: true, margin: '-5% 0px' },
+                transition: { delay: (n % 5) * 0.06, duration: 0.8, ease: [0.16, 1, 0.3, 1] as const },
+              }
+              if (p.kind === 'photo') {
+                const index = photos.findIndex((ph) => ph.id === p.id)
+                const ph = photos[index]
+                if (!ph) return null
+                return (
+                  <motion.button
+                    key={p.id}
+                    type="button"
+                    {...anim}
+                    onClick={() => onOpen(index)}
+                    aria-label={`Open photo ${index + 1} of ${photos.length}`}
+                    className={`${place} group block transition-transform duration-500 hover:-translate-y-[0.3cqw] focus:outline-none focus-visible:ring-4 focus-visible:ring-marigold`}
+                    style={box}
+                  >
+                    <Frame frame={p.frame} mat={p.mat}>
+                      <img
+                        src={thumbSrc(ph)}
+                        alt={ph.alt ?? ''}
+                        loading="lazy"
+                        decoding="async"
+                        className="absolute inset-0 h-full w-full object-cover brightness-[0.92] transition duration-500 group-hover:brightness-105"
+                        style={{ objectPosition: p.focus ?? 'center' }}
+                      />
+                    </Frame>
+                  </motion.button>
+                )
+              }
               return (
-                <motion.button
-                  key={p.id}
-                  type="button"
-                  {...anim}
-                  onClick={() => onOpen(index)}
-                  aria-label={`Open photo ${index + 1} of ${photos.length}`}
-                  className={`${place} group block transition-transform duration-500 hover:-translate-y-[0.3cqw] focus:outline-none focus-visible:ring-4 focus-visible:ring-marigold`}
-                  style={box}
-                >
-                  <Frame frame={p.frame} mat={p.mat}>
-                    <img
-                      src={thumbSrc(ph)}
-                      alt={ph.alt ?? ''}
-                      loading="lazy"
-                      decoding="async"
-                      className="absolute inset-0 h-full w-full object-cover brightness-[0.92] transition duration-500 group-hover:brightness-105"
-                      style={{ objectPosition: p.focus ?? 'center' }}
-                    />
-                  </Frame>
-                </motion.button>
+                <motion.div key={`${p.kind}-${n}`} aria-hidden {...anim} className={`${place} ${p.kind === 'mirror' || p.kind === 'arch' || p.kind === 'medallion' ? 'z-20' : ''}`} style={box}>
+                  {p.kind === 'botanical' && <Frame frame={p.frame} mat={p.mat}><Botanical /></Frame>}
+                  {p.kind === 'map' && <Frame frame={p.frame} mat={p.mat}><VintageMap /></Frame>}
+                  {p.kind === 'mirror' && <Haunted offset={0}>{(who) => <Mirror who={who} />}</Haunted>}
+                  {p.kind === 'arch' && <Haunted offset={6000}>{(who) => <span className="relative block h-full w-full"><GothicArch who={who} /></span>}</Haunted>}
+                  {p.kind === 'sconce' && <Sconce />}
+                  {p.kind === 'medallion' && <Medallion />}
+                </motion.div>
               )
-            }
-            return (
-              <motion.div key={`${p.kind}-${n}`} aria-hidden {...anim} className={`${place} ${p.kind === 'mirror' || p.kind === 'arch' || p.kind === 'medallion' ? 'z-20' : ''}`} style={box}>
-                {p.kind === 'botanical' && <Frame frame={p.frame} mat={p.mat}><Botanical /></Frame>}
-                {p.kind === 'map' && <Frame frame={p.frame} mat={p.mat}><VintageMap /></Frame>}
-                {p.kind === 'mirror' && <Haunted offset={0}>{(who) => <Mirror who={who} />}</Haunted>}
-                {p.kind === 'arch' && <Haunted offset={6000}>{(who) => <span className="relative block h-full w-full"><GothicArch who={who} /></span>}</Haunted>}
-                {p.kind === 'sconce' && <Sconce />}
-                {p.kind === 'medallion' && <Medallion />}
-              </motion.div>
-            )
-          })}
-        </div>
-        <div className="absolute inset-x-[4%] bottom-0 z-30 md:inset-x-auto md:left-[18cqw] md:top-[calc(56*1cqw)] md:bottom-auto md:w-[64cqw]">
-          <Credenza />
+            })}
+          </div>
+          <div className="absolute inset-x-[4%] bottom-0 z-30 md:inset-x-auto md:left-[18cqw] md:top-[calc(56*1cqw)] md:bottom-auto md:w-[64cqw]">
+            <Credenza />
+          </div>
         </div>
       </div>
-    </div>
+    </OnScreen.Provider>
   )
 }

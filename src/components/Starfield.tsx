@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { isLightDevice, skyDpr } from './sky/budget'
 import { HI, LO, NEBULA_PALETTES, milkyWayCanvas, milkyWayPixels, nebulaCanvas, nebulaPixels, paintSpikedStar } from './sky/paint'
 
 // A slow fall through deep space.
@@ -64,7 +65,7 @@ export function Starfield({ hidden = false }: { hidden?: boolean }) {
     let w = 0
     let h = 0
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      const dpr = skyDpr()
       w = window.innerWidth
       h = window.innerHeight
       canvas.width = w * dpr
@@ -100,7 +101,7 @@ export function Starfield({ hidden = false }: { hidden?: boolean }) {
       tint: TINTS[Math.floor(Math.random() * TINTS.length)],
       spiked: Math.random() < 0.025,
     })
-    const stars = Array.from({ length: STAR_COUNT }, () => spawnStar())
+    const stars = Array.from({ length: isLightDevice() ? Math.round(STAR_COUNT * 0.55) : STAR_COUNT }, () => spawnStar())
 
     let nextShape = 0
     const spawnBody = (z: number): Body => {

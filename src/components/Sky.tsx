@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { Starfield } from '@/components/Starfield'
-import { NightFlight } from '@/components/NightFlight'
 import { setSkyMode, useFlightStatus, useSkyMode, type SkyMode } from '@/components/sky/mode'
+
+// The night flight (and its route and city data) only loads for people who pick it.
+const NightFlight = lazy(() => import('@/components/NightFlight').then((m) => ({ default: m.NightFlight })))
 
 /** The page background, fading between deep space and the night flight when the mode changes. */
 export function Sky() {
@@ -23,7 +25,13 @@ export function Sky() {
   }, [mode, shown])
 
   const hidden = mode !== shown || !settled
-  return shown === 'flight' ? <NightFlight hidden={hidden} /> : <Starfield hidden={hidden} />
+  return shown === 'flight' ? (
+    <Suspense fallback={null}>
+      <NightFlight hidden={hidden} />
+    </Suspense>
+  ) : (
+    <Starfield hidden={hidden} />
+  )
 }
 
 const OPTIONS: { mode: SkyMode; label: string; icon: React.ReactNode }[] = [

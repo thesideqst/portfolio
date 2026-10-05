@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { KM, PALETTE, buildCity, loadCityMap, type City, type Light } from './sky/cities'
 import { buildChunk, chunkCount, chunkSpan, leg, loadStrip, pathAt, type Leg } from './sky/route'
 import { setFlightStatus } from './sky/mode'
+import { skyDpr } from './sky/budget'
 import { cloudCanvas, glowCanvas } from './sky/paint'
 
 // A night flight around the world.
@@ -52,7 +53,7 @@ export function NightFlight({ hidden = false }: { hidden?: boolean }) {
     let w = 0
     let h = 0
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      const dpr = skyDpr()
       w = window.innerWidth
       h = window.innerHeight
       canvas.width = w * dpr

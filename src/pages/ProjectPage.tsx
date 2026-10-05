@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from 'react'
+import { Suspense, useEffect, type ReactNode } from 'react'
 import { Link } from 'react-router'
 import { Contact } from '@/components/Closing'
 import { SkyToggle } from '@/components/Sky'
@@ -23,7 +23,10 @@ export function ProjectPage({ children }: { children: ReactNode }) {
           </div>
         </div>
       </header>
-      <main className="pt-10">{children}</main>
+      <main className="pt-10">
+        {/* Holds the page open while its code loads, so the footer doesn't jump up. */}
+        <Suspense fallback={<div className="min-h-[100svh]" />}>{children}</Suspense>
+      </main>
       <Contact />
     </>
   )
