@@ -6,7 +6,8 @@ import { loadGeo } from '@/lib/geo'
 import { photos, thumbSrc } from '@/photos'
 
 // A gothic salon wall: Aliya's photos hung tight on dark damask among antique mirrors, a map,
-// a pressed fern and a candle sconce, above an ebony credenza with her books on it. On desktop
+// a pressed fern, a candle sconce and a framed playbill, above an ebony credenza with her books
+// (and a hextech crystal) on it. On desktop
 // every piece sits at a fixed spot on a wall 100 units wide (1 unit = 1cqw); on phones the same
 // pieces wrap, scaled up by --s.
 
@@ -14,7 +15,7 @@ type Moulding = 'ornate' | 'gilt' | 'ebony' | 'mahogany' | 'iron'
 type Mat = 'ivory' | 'black'
 type Piece = { x: number; y: number; w: number; h: number; frame?: Moulding; mat?: Mat } & (
   | { kind: 'photo'; id: string; focus?: string }
-  | { kind: 'botanical' | 'map' | 'mirror' | 'arch' | 'sconce' | 'medallion' }
+  | { kind: 'botanical' | 'map' | 'mirror' | 'arch' | 'sconce' | 'medallion' | 'playbill' }
 )
 
 const pieces: Piece[] = [
@@ -39,6 +40,7 @@ const pieces: Piece[] = [
   { kind: 'photo', id: 'img-7974', x: 84, y: 22, w: 13, h: 17, frame: 'ornate', mat: 'ivory' },
   { kind: 'photo', id: 'mood-1789933170499', x: 84, y: 41, w: 13, h: 10.5, frame: 'mahogany', focus: 'center 62%' },
   { kind: 'medallion', x: 88, y: 52.3, w: 5, h: 9.25 },
+  { kind: 'playbill', x: 5, y: 52, w: 7.5, h: 10.6, frame: 'gilt' },
 ]
 
 const gold = 'linear-gradient(135deg, #e6c676, #8c6623 38%, #d9b25a 62%, #6e4f17)'
@@ -662,6 +664,106 @@ function Skull() {
   )
 }
 
+/** The playbill for a show she hasn't seen yet, framed ahead of time. */
+function Playbill({ frame }: { frame?: Moulding }) {
+  const [on, setOn] = useState(false)
+  return (
+    <button
+      type="button"
+      aria-label="A framed playbill for Spring Awakening at Studio Seaview."
+      onMouseEnter={() => setOn(true)}
+      onMouseLeave={() => setOn(false)}
+      onFocus={() => setOn(true)}
+      onBlur={() => setOn(false)}
+      onClick={() => setOn((v) => !v)}
+      className="relative block h-full w-full focus:outline-none"
+    >
+      <Frame frame={frame}>
+        <svg viewBox="0 0 55 78" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
+          <rect width="55" height="78" fill="#f4efe2" />
+          {/* The yellow masthead. */}
+          <rect width="55" height="11" fill="#f2c230" />
+          <text x="27.5" y="8.4" textAnchor="middle" fontFamily="'Oswald', sans-serif" fontWeight="500" fontSize="8" letterSpacing="0.6" fill="#141210">PLAYBILL</text>
+          {/* Cover art: a dark field with a single sapling coming into leaf. */}
+          <rect x="3" y="14" width="49" height="54" fill="#17201a" />
+          <path d="M27.5 60 C27 52 28.5 46 27.5 38" stroke="#6f8a5a" strokeWidth="0.9" fill="none" />
+          <path d="M27.8 48 q5 -3 7 -8 q-6 1.5 -7 6.5z M27.4 43 q-5 -2.5 -6.5 -7.5 q5.5 1.5 6.5 6z M27.6 39 q2 -4 5.5 -5 q-2 4.5 -5.5 5z" fill="#9cc27a" />
+          <text x="27.5" y="23" textAnchor="middle" fontFamily="'IM Fell English', serif" fontSize="6.4" fill="#efe6d0">Spring</text>
+          <text x="27.5" y="30.5" textAnchor="middle" fontFamily="'IM Fell English', serif" fontSize="6.4" fill="#efe6d0">Awakening</text>
+          <text x="27.5" y="74.5" textAnchor="middle" fontFamily="'Oswald', sans-serif" fontSize="3.6" letterSpacing="0.5" fill="#3a3530">STUDIO SEAVIEW</text>
+        </svg>
+      </Frame>
+      {on && (
+        <span className="pointer-events-none absolute bottom-[calc(100%+0.75rem)] left-0 z-30 block w-max max-w-[15rem] rounded-lg bg-[#0d0b0d]/95 px-3 py-2 text-left shadow-xl ring-1 ring-[#b8923f]/50">
+          <span className="block font-display text-sm leading-tight text-[#efe2c2]">Spring Awakening</span>
+          <span className="mt-0.5 block text-xs text-[#b9a98a]">Studio Seaview · previews from Nov 27, 2026</span>
+          <span className="mt-1.5 block text-xs italic leading-snug text-[#d9cdb0]">Framed before the curtain’s even up.</span>
+        </span>
+      )}
+    </button>
+  )
+}
+
+/** A hextech crystal on a brass stand, a long way from Piltover. Close by, the medallion hums. */
+function HextechCrystal() {
+  const [on, setOn] = useState(false)
+  const still = useStill()
+  const id = useId()
+  // Magic nearby: the medallion on the wall picks it up while the crystal is being looked at.
+  useEffect(() => {
+    if (!on) return
+    sense(1)
+    return () => sense(-1)
+  }, [on])
+  return (
+    <button
+      type="button"
+      aria-label="A glowing blue hextech crystal on a brass stand."
+      onMouseEnter={() => setOn(true)}
+      onMouseLeave={() => setOn(false)}
+      onFocus={() => setOn(true)}
+      onBlur={() => setOn(false)}
+      onClick={() => setOn((v) => !v)}
+      className="absolute bottom-full left-[86%] block w-[5cqw] focus:outline-none"
+      style={{ height: '9cqw' }}
+    >
+      {/* The glow is its own layer, so pulsing it is just an opacity change. */}
+      <motion.span
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-[8%] block aspect-square w-[260%] -translate-x-1/2 rounded-full"
+        style={{ background: 'radial-gradient(circle closest-side, rgba(90,200,255,0.35), rgba(60,140,255,0.08) 60%, transparent)' }}
+        animate={still ? { opacity: on ? 1 : 0.7 } : { opacity: on ? [0.9, 1, 0.9] : [0.55, 0.8, 0.55] }}
+        transition={still ? { duration: 0.3 } : { duration: on ? 1.2 : 3.2, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <svg viewBox="0 0 30 54" className="absolute inset-0 h-full w-full overflow-visible" style={{ filter: 'drop-shadow(0 0.4cqw 0.5cqw rgba(0,0,0,0.6))' }}>
+        <defs>
+          <linearGradient id={`${id}hex`} x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#e6fbff" />
+            <stop offset="0.4" stopColor="#5fd0ff" />
+            <stop offset="1" stopColor="#1d5fd1" />
+          </linearGradient>
+        </defs>
+        {/* Brass cradle and base. */}
+        <rect x="6" y="49" width="18" height="4" rx="1" fill="#6e4f17" />
+        <rect x="6" y="49" width="18" height="1.2" fill="#d9b25a" />
+        <path d="M15 49 V42" stroke="#b8923f" strokeWidth="1.6" />
+        <path d="M6.5 30 C6.5 40 10 43 15 43 C20 43 23.5 40 23.5 30" stroke="#d9b25a" strokeWidth="1.3" fill="none" />
+        <path d="M4.5 30 h4 M21.5 30 h4" stroke="#b8923f" strokeWidth="1.6" strokeLinecap="round" />
+        {/* The crystal: a long faceted gem, lit from inside. */}
+        <path d="M15 4 L22 18 L15 40 L8 18 Z" fill={`url(#${id}hex)`} />
+        <path d="M15 4 L15 40 M8 18 L22 18 M15 4 L11.5 18 L15 40 M15 4 L18.5 18 L15 40" stroke="rgba(230,250,255,0.55)" strokeWidth="0.45" fill="none" />
+        <path d="M15 4 L8 18 L11.5 18 Z" fill="rgba(255,255,255,0.35)" />
+      </svg>
+      {on && (
+        <span className="pointer-events-none absolute bottom-[calc(100%+0.6rem)] right-0 z-30 block w-max max-w-[15rem] rounded-lg bg-[#0d0b0d]/95 px-3 py-2 text-left shadow-xl ring-1 ring-[#5fd0ff]/50">
+          <span className="block font-display text-sm leading-tight text-[#e6fbff]">A hextech crystal</span>
+          <span className="mt-0.5 block text-xs leading-snug text-[#a9c4d0]">On loan from Piltover, with no paperwork whatsoever. The medallion on the wall starts humming whenever someone gets close to it.</span>
+        </span>
+      )}
+    </button>
+  )
+}
+
 function Credenza() {
   return (
     // Its own container, so everything on it is sized as a share of the credenza's width.
@@ -678,6 +780,7 @@ function Credenza() {
       <Bookshelf />
       <Skull />
       <Rose />
+      <HextechCrystal />
       {/* The credenza: ebony with pointed-arch panels and brass pulls. */}
       <div className="absolute inset-0 rounded-t-[0.4cqw] bg-[#130f10] shadow-[0_-0.3cqw_1cqw_rgba(0,0,0,0.5)]">
         <div className="absolute -inset-x-[0.8cqw] top-0 h-[1.5cqw] rounded-t-[0.4cqw]" style={{ background: 'linear-gradient(180deg, #3a2b26, #1b1413)' }} />
@@ -754,13 +857,14 @@ export function GalleryWall({ onOpen }: { onOpen: (index: number) => void }) {
                 )
               }
               return (
-                <motion.div key={`${p.kind}-${n}`} aria-hidden {...anim} className={`${place} ${p.kind === 'mirror' || p.kind === 'arch' || p.kind === 'medallion' ? 'z-20' : ''}`} style={box}>
+                <motion.div key={`${p.kind}-${n}`} aria-hidden {...anim} className={`${place} ${p.kind === 'mirror' || p.kind === 'arch' || p.kind === 'medallion' || p.kind === 'playbill' ? 'z-20' : ''}`} style={box}>
                   {p.kind === 'botanical' && <Frame frame={p.frame} mat={p.mat}><Botanical /></Frame>}
                   {p.kind === 'map' && <Frame frame={p.frame} mat={p.mat}><VintageMap /></Frame>}
                   {p.kind === 'mirror' && <Haunted offset={0}>{(who) => <Mirror who={who} />}</Haunted>}
                   {p.kind === 'arch' && <Haunted offset={6000}>{(who) => <span className="relative block h-full w-full"><GothicArch who={who} /></span>}</Haunted>}
                   {p.kind === 'sconce' && <Sconce />}
                   {p.kind === 'medallion' && <Medallion />}
+                  {p.kind === 'playbill' && <Playbill frame={p.frame} />}
                 </motion.div>
               )
             })}
