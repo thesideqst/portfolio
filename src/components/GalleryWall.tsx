@@ -664,9 +664,10 @@ function Skull() {
   )
 }
 
-/** The playbill for a show she hasn't seen yet, framed ahead of time. */
+/** The playbill for a show she hasn't seen yet, framed ahead of time, styled after the show's original Broadway one. */
 function Playbill({ frame }: { frame?: Moulding }) {
   const [on, setOn] = useState(false)
+  const id = useId()
   return (
     <button
       type="button"
@@ -679,18 +680,42 @@ function Playbill({ frame }: { frame?: Moulding }) {
       className="relative block h-full w-full focus:outline-none"
     >
       <Frame frame={frame}>
-        <svg viewBox="0 0 55 78" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
-          <rect width="55" height="78" fill="#f4efe2" />
-          {/* The yellow masthead. */}
-          <rect width="55" height="11" fill="#f2c230" />
-          <text x="27.5" y="8.4" textAnchor="middle" fontFamily="'Oswald', sans-serif" fontWeight="500" fontSize="8" letterSpacing="0.6" fill="#141210">PLAYBILL</text>
-          {/* Cover art: a dark field with a single sapling coming into leaf. */}
-          <rect x="3" y="14" width="49" height="54" fill="#17201a" />
-          <path d="M27.5 60 C27 52 28.5 46 27.5 38" stroke="#6f8a5a" strokeWidth="0.9" fill="none" />
-          <path d="M27.8 48 q5 -3 7 -8 q-6 1.5 -7 6.5z M27.4 43 q-5 -2.5 -6.5 -7.5 q5.5 1.5 6.5 6z M27.6 39 q2 -4 5.5 -5 q-2 4.5 -5.5 5z" fill="#9cc27a" />
-          <text x="27.5" y="23" textAnchor="middle" fontFamily="'IM Fell English', serif" fontSize="6.4" fill="#efe6d0">Spring</text>
-          <text x="27.5" y="30.5" textAnchor="middle" fontFamily="'IM Fell English', serif" fontSize="6.4" fill="#efe6d0">Awakening</text>
-          <text x="27.5" y="74.5" textAnchor="middle" fontFamily="'Oswald', sans-serif" fontSize="3.6" letterSpacing="0.5" fill="#3a3530">STUDIO SEAVIEW</text>
+        <svg viewBox="0 0 55 80" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
+          <defs>
+            <linearGradient id={`${id}dark`} x1="0" y1="0" x2="0.4" y2="1">
+              <stop offset="0" stopColor="#3b3a3c" />
+              <stop offset="0.45" stopColor="#1c1b1d" />
+              <stop offset="1" stopColor="#0a0a0b" />
+            </linearGradient>
+            <radialGradient id={`${id}sky`} cx="40%" cy="35%" r="70%">
+              <stop offset="0" stopColor="#bdb7b0" />
+              <stop offset="0.6" stopColor="#6f6a66" />
+              <stop offset="1" stopColor="#2e2c2c" />
+            </radialGradient>
+          </defs>
+          {/* The yellow masthead, then the theatre on a white band. */}
+          <rect width="55" height="12" fill="#f6d21c" />
+          <text x="27.5" y="10" textAnchor="middle" textLength="47" lengthAdjust="spacingAndGlyphs" fontFamily="'Oswald', sans-serif" fontWeight="500" fontSize="11" fill="#111" stroke="#111" strokeWidth="0.45">PLAYBILL</text>
+          <rect y="12" width="55" height="4.4" fill="#fbfaf6" />
+          <text x="27.5" y="15.3" textAnchor="middle" fontFamily="'Oswald', sans-serif" fontSize="2.7" letterSpacing="0.4" fill="#222">STUDIO SEAVIEW</text>
+          {/* The cover photo, in grainy black and white: a lone tree on a dark hill under a pale sky. */}
+          <rect y="16.4" width="55" height="63.6" fill={`url(#${id}dark)`} />
+          <ellipse cx="34" cy="28" rx="26" ry="14" fill={`url(#${id}sky)`} opacity="0.55" />
+          <path d="M-2 56 C10 48 22 45 34 46 C44 47 50 50 57 54 L57 80 L-2 80Z" fill="#141314" />
+          <path d="M-2 62 C14 57 30 56 57 60 L57 80 L-2 80Z" fill="#0b0b0c" />
+          <g stroke="#0e0d0e" strokeLinecap="round" fill="none">
+            <path d="M33 47 C33.5 41 32.5 36 34 30" strokeWidth="1.6" />
+            <path d="M33.6 38 C30 35 27 34 24 30 M33.4 35 C37 32 40 31 43 27 M34 31 C33 27 31 25 30 22 M34 31 C36 27 38 25 38 22 M28 33 C26 32 25 30 25 28 M40 30 C42 30 44 29 45 31" strokeWidth="0.7" />
+          </g>
+          <g fill="#0e0d0e">
+            <circle cx="24" cy="30" r="1.1" /><circle cx="43" cy="27" r="1" /><circle cx="30" cy="22" r="0.9" /><circle cx="38" cy="22" r="1" /><circle cx="25" cy="28" r="0.8" /><circle cx="45" cy="31" r="0.8" />
+          </g>
+          <rect y="16.4" width="55" height="63.6" fill="#000" opacity="0.12" />
+          {/* The title, in red marker, tilted across the bottom of the photo. */}
+          <g transform="rotate(-11 27.5 64)" fontFamily="'Permanent Marker', 'Oswald', sans-serif" fill="#d0242c" textAnchor="middle">
+            <text x="22" y="60" fontSize="7.6">SPRING</text>
+            <text x="28.5" y="69.5" fontSize="9.6" textLength="44" lengthAdjust="spacingAndGlyphs">AWAKENING</text>
+          </g>
         </svg>
       </Frame>
       {on && (
@@ -857,7 +882,7 @@ export function GalleryWall({ onOpen }: { onOpen: (index: number) => void }) {
                 )
               }
               return (
-                <motion.div key={`${p.kind}-${n}`} aria-hidden {...anim} className={`${place} ${p.kind === 'mirror' || p.kind === 'arch' || p.kind === 'medallion' || p.kind === 'playbill' ? 'z-20' : ''}`} style={box}>
+                <motion.div key={`${p.kind}-${n}`} aria-hidden {...anim} className={`${place} ${p.kind === 'playbill' ? 'z-40' : p.kind === 'mirror' || p.kind === 'arch' || p.kind === 'medallion' ? 'z-20' : ''}`} style={box}>
                   {p.kind === 'botanical' && <Frame frame={p.frame} mat={p.mat}><Botanical /></Frame>}
                   {p.kind === 'map' && <Frame frame={p.frame} mat={p.mat}><VintageMap /></Frame>}
                   {p.kind === 'mirror' && <Haunted offset={0}>{(who) => <Mirror who={who} />}</Haunted>}
