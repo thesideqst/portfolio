@@ -687,7 +687,7 @@ function Playbill({ frame }: { frame?: Moulding }) {
               <stop offset="0.45" stopColor="#1c1b1d" />
               <stop offset="1" stopColor="#0a0a0b" />
             </linearGradient>
-            <radialGradient id={`${id}skin`} cx="40%" cy="35%" r="70%">
+            <radialGradient id={`${id}sky`} cx="40%" cy="35%" r="70%">
               <stop offset="0" stopColor="#bdb7b0" />
               <stop offset="0.6" stopColor="#6f6a66" />
               <stop offset="1" stopColor="#2e2c2c" />
@@ -698,18 +698,18 @@ function Playbill({ frame }: { frame?: Moulding }) {
           <text x="27.5" y="10" textAnchor="middle" textLength="47" lengthAdjust="spacingAndGlyphs" fontFamily="'Oswald', sans-serif" fontWeight="500" fontSize="11" fill="#111" stroke="#111" strokeWidth="0.45">PLAYBILL</text>
           <rect y="12" width="55" height="4.4" fill="#fbfaf6" />
           <text x="27.5" y="15.3" textAnchor="middle" fontFamily="'Oswald', sans-serif" fontSize="2.7" letterSpacing="0.4" fill="#222">STUDIO SEAVIEW</text>
-          {/* The cover photo: two figures lying tangled in the dark, in grainy black and white. */}
+          {/* The cover photo, in grainy black and white: a lone tree on a dark hill under a pale sky. */}
           <rect y="16.4" width="55" height="63.6" fill={`url(#${id}dark)`} />
-          {/* One lies back with an arm thrown over their head; the other rests a cheek on their chest. */}
-          <path d="M-2 47 C8 42 18 40 28 41 C34 41.5 38 40 42 38 L46 41 C40 45 34 47 26 48 C16 49 6 52 -2 55Z" fill={`url(#${id}skin)`} opacity="0.7" />
-          <ellipse cx="45" cy="37" rx="5" ry="4" transform="rotate(-25 45 37)" fill="#9d978f" opacity="0.75" />
-          <path d="M41 34 C44 29 50 28 53 31 C49 30 45 31 42 35Z" fill="#121112" opacity="0.9" />
-          <path d="M47 34 C50 28 49 22 44 19 C42 18 40 19 41 21 C45 23 46 28 44 33Z" fill={`url(#${id}skin)`} opacity="0.6" />
-          <path d="M14 40 C18 35 24 33 29 35 C27 38 22 40 16 42Z" fill="#0f0e0f" opacity="0.85" />
-          <ellipse cx="21" cy="40" rx="4.6" ry="3.6" transform="rotate(15 21 40)" fill="#8a847d" opacity="0.65" />
-          <path d="M18 43 C24 46 32 47 40 46 C33 49 25 50 18 48Z" fill="#6d6863" opacity="0.5" />
-          {/* Grain and shadow, so it reads as a dim photograph. */}
-          <path d="M0 52 C14 54 30 56 55 50 L55 80 L0 80Z" fill="#0b0b0c" opacity="0.75" />
+          <ellipse cx="34" cy="28" rx="26" ry="14" fill={`url(#${id}sky)`} opacity="0.55" />
+          <path d="M-2 56 C10 48 22 45 34 46 C44 47 50 50 57 54 L57 80 L-2 80Z" fill="#141314" />
+          <path d="M-2 62 C14 57 30 56 57 60 L57 80 L-2 80Z" fill="#0b0b0c" />
+          <g stroke="#0e0d0e" strokeLinecap="round" fill="none">
+            <path d="M33 47 C33.5 41 32.5 36 34 30" strokeWidth="1.6" />
+            <path d="M33.6 38 C30 35 27 34 24 30 M33.4 35 C37 32 40 31 43 27 M34 31 C33 27 31 25 30 22 M34 31 C36 27 38 25 38 22 M28 33 C26 32 25 30 25 28 M40 30 C42 30 44 29 45 31" strokeWidth="0.7" />
+          </g>
+          <g fill="#0e0d0e">
+            <circle cx="24" cy="30" r="1.1" /><circle cx="43" cy="27" r="1" /><circle cx="30" cy="22" r="0.9" /><circle cx="38" cy="22" r="1" /><circle cx="25" cy="28" r="0.8" /><circle cx="45" cy="31" r="0.8" />
+          </g>
           <rect y="16.4" width="55" height="63.6" fill="#000" opacity="0.12" />
           {/* The title, in red marker, tilted across the bottom of the photo. */}
           <g transform="rotate(-11 27.5 64)" fontFamily="'Permanent Marker', 'Oswald', sans-serif" fill="#d0242c" textAnchor="middle">
