@@ -12,6 +12,7 @@ export const links = {
   linkedin: 'https://www.linkedin.com/in/aliyareneekhan/',
   github: 'https://github.com/thesideqst',
   accountSignals: 'https://github.com/thesideqst/account-signals',
+  accountSignalsApp: 'https://account-audio-briefing.lovable.app/',
   instagram: 'https://www.instagram.com/lifeofaliya/',
   instagramHandle: 'lifeofaliya',
   // TODO: swap for Aliya's Fora advisor profile URL once she shares it.
@@ -131,11 +132,7 @@ export const skills: { group: string; items: string }[] = [
   },
 ]
 
-/** First ~46s of the NVDA fiscal Q2 2027 briefing. */
-export const briefingExcerpt = `NVIDIA just delivered a quarter that feels like a seismic shift in the AI compute landscape, and the numbers are shouting louder than the polished slides. Revenue surged to $96.2 billion, a 17.9 percent jump from the prior quarter and more than double the year-ago level at 105.9 percent growth. That kind of top-line lift isn’t just good news; it’s a clear signal that the AI-driven infrastructure build-out is no longer a future promise. It’s happening now, and it’s moving faster than anyone expected.`
-
 export const media = {
-  briefing: '/media/account-signals-excerpt.m4a',
   runway: [
     { src: '/media/runway-20260827-170013.mp4', title: 'Hand-drawn explainer', note: 'Line-art character animation' },
     { src: '/media/runway-20260828-015535.mp4', title: 'Clinical scene', note: 'Cinematic dialogue scene' },

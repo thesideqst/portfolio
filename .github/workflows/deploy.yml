@@ -3,6 +3,9 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  # Rebuild every few hours so /account-signals picks up the newest episode.
+  schedule:
+    - cron: '17 */6 * * *'
   workflow_dispatch:
 
 permissions:

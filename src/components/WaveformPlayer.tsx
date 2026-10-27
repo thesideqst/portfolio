@@ -34,8 +34,11 @@ function fmt(t: number) {
   return `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`
 }
 
-export function WaveformPlayer({ src, transcript }: { src: string; transcript: string }) {
+type Props = { src: string; title: string; meta: string; transcript: string }
+
+export function WaveformPlayer({ src, title, meta, transcript }: Props) {
   const audio = useRef<HTMLAudioElement>(null)
+  const script = useRef<HTMLParagraphElement>(null)
   const [peaks, setPeaks] = useState<number[]>(fallbackPeaks)
   const [playing, setPlaying] = useState(false)
   const [time, setTime] = useState(0)
@@ -44,12 +47,23 @@ export function WaveformPlayer({ src, transcript }: { src: string; transcript: s
   const words = useMemo(() => transcript.split(/\s+/), [transcript])
 
   useEffect(() => {
-    decodePeaks(src).then((p) => (p ? setPeaks(p) : setMissing(true)))
+    // Cross-origin audio can play without CORS but can't be decoded, so keep the placeholder shape then.
+    if (new URL(src, location.href).origin !== location.origin) return
+    decodePeaks(src).then((p) => p && setPeaks(p))
   }, [src])
 
   const progress = duration ? time / duration : 0
   // Narration pace is steady, so word position tracks elapsed time closely enough.
   const wordIndex = Math.floor(progress * words.length)
+
+  // Keep the spoken word in view inside the transcript box without scrolling the page.
+  useEffect(() => {
+    const box = script.current
+    const word = box?.children[wordIndex] as HTMLElement | undefined
+    if (!box || !word || time === 0) return
+    const target = word.offsetTop - box.offsetTop - box.clientHeight / 3
+    if (Math.abs(box.scrollTop - target) > box.clientHeight / 3) box.scrollTo({ top: target, behavior: 'smooth' })
+  }, [wordIndex, time])
 
   const toggle = () => {
     const a = audio.current
@@ -92,9 +106,9 @@ export function WaveformPlayer({ src, transcript }: { src: string; transcript: s
           )}
         </button>
         <div className="min-w-0">
-          <p className="font-display text-xl leading-tight">NVDA · fiscal Q2 2027</p>
+          <p className="font-display text-xl leading-tight">{title}</p>
           <p className="font-mono text-xs text-ash">
-            {missing ? 'Audio excerpt not added yet' : `${fmt(time)} / ${fmt(duration)} · excerpt from an 8-minute episode`}
+            {missing ? `Audio unavailable · ${meta}` : `${fmt(time)} / ${fmt(duration)} · ${meta}`}
           </p>
         </div>
       </div>
@@ -133,7 +147,7 @@ export function WaveformPlayer({ src, transcript }: { src: string; transcript: s
         })}
       </div>
 
-      <p className="mt-6 text-[0.95rem] leading-relaxed text-ash">
+      <p ref={script} className="mt-6 max-h-56 overflow-y-auto pr-2 text-[0.95rem] leading-relaxed text-ash">
         {words.map((w, i) => (
           <span
             key={i}

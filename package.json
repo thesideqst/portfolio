@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "episode": "node scripts/fetch-latest-episode.mjs",
+    "prebuild": "npm run episode",
     "build": "tsc -b && vite build && cp dist/index.html dist/404.html",
     "lint": "oxlint",
     "preview": "vite preview"
