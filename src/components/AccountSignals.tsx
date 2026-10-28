@@ -1,8 +1,12 @@
 import { forwardRef, useRef, type ReactNode } from 'react'
 import { AnimatedBeam } from '@/components/ui/animated-beam'
-import { briefingExcerpt, links, media } from '@/content'
+import { links } from '@/content'
+// Refreshed from the live app before every build by scripts/fetch-latest-episode.mjs.
+import episode from '@/latest-episode.json'
 import { SectionHeading } from './SectionHeading'
 import { WaveformPlayer } from './WaveformPlayer'
+
+const aired = new Date(episode.generatedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
 
 const Node = forwardRef<HTMLDivElement, { label: string; sub?: string; accent?: boolean; children?: ReactNode }>(
   ({ label, sub, accent }, ref) => (
@@ -68,11 +72,21 @@ export function AccountSignals() {
             It ingests 700K+ signals in Databricks and computes financial deltas deterministically using SQL,{' '}
             <span className="text-bone">then uses LLMs to weave key facts into a digestible narrative.</span>
           </p>
-          <a href={links.accountSignals} className="inline-flex items-center gap-2 text-marigold underline-offset-4 hover:underline">
-            Code on GitHub <span aria-hidden>↗</span>
-          </a>
+          <div className="flex flex-wrap gap-x-6 gap-y-2">
+            <a href={links.accountSignalsApp} className="inline-flex items-center gap-2 text-marigold underline-offset-4 hover:underline">
+              Open the live app <span aria-hidden>↗</span>
+            </a>
+            <a href={links.accountSignals} className="inline-flex items-center gap-2 text-marigold underline-offset-4 hover:underline">
+              Code on GitHub <span aria-hidden>↗</span>
+            </a>
+          </div>
         </div>
-        <WaveformPlayer src={media.briefing} transcript={briefingExcerpt} />
+        <WaveformPlayer
+          src={episode.audio}
+          title={episode.title}
+          meta={`${episode.account} · ${aired}`}
+          transcript={episode.script}
+        />
       </div>
 
       <div className="mt-10">
