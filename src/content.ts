@@ -13,6 +13,7 @@ export const links = {
   github: 'https://github.com/thesideqst',
   accountSignals: 'https://github.com/thesideqst/account-signals',
   accountSignalsApp: 'https://account-audio-briefing.lovable.app/',
+  jarfully: 'https://www.jarfully.app',
   instagram: 'https://www.instagram.com/lifeofaliya/',
   instagramHandle: 'lifeofaliya',
   // TODO: swap for Aliya's Fora advisor profile URL once she shares it.
@@ -262,6 +263,24 @@ export const projects: Project[] = [
     more: { label: 'Meet the stylists', href: '/mirorra' },
   },
   {
+    slug: 'jarfully',
+    title: 'Jarfully',
+    image: '/media/covers/jarfully.jpg',
+    summary: [
+      'Every habit you keep drops a glass marble into a jar, where it bounces and settles with real physics, so your good days pile up somewhere you can actually see them (with a soft raga playing along, if you turn the sound on).',
+    ],
+    more: { label: 'Start a jar', href: links.jarfully },
+  },
+  {
+    slug: 'knowledge-work',
+    title: 'Knowledge Work',
+    image: '/media/covers/knowledge-work.svg',
+    summary: [
+      'Longer pieces on what AI actually costs and what it’s worth, written for the people who sign off on the spend (and the ones who have to explain the bill afterward).',
+    ],
+    more: { label: 'Read the essays', href: '/knowledge-work' },
+  },
+  {
     slug: 'photography',
     title: 'Photography',
     image: '/media/covers/photography.jpg',
@@ -283,6 +302,33 @@ export const projects: Project[] = [
       'I’m a registered Fora travel advisor who has wandered through 20+ countries, and I plan every client’s trip with the same care I’d put into my own.',
     ],
     more: { label: 'Plan a trip', href: '/fora' },
+  },
+]
+
+// ---- Knowledge work (/knowledge-work) ---------------------------------------------
+
+export type Essay = {
+  title: string
+  /** The piece's own subtitle, if it has one. */
+  subtitle?: string
+  /** One or two lines on what the reader gets. */
+  blurb: string
+  href: string
+}
+
+export const essays: Essay[] = [
+  {
+    title: 'What is a personal agent worth?',
+    blurb:
+      'Minutes saved is the wrong yardstick for a personal agent, so this piece measures it by the commitments it helps you keep, and sketches a cost-per-promise-kept test you could run on a hundred real commitments.',
+    href: 'https://what-is-a-personal-agent-worth.witty-coot-9069.chatgpt.site/',
+  },
+  {
+    title: 'What even is tokenomics?',
+    subtitle: 'A field guide for CIOs, CTOs, CFOs and anyone else managing technology spend',
+    blurb:
+      'Token prices make a poor compass on their own, so this guide follows AI spend from the power bill all the way to business value and argues for counting the cost of each task that actually succeeds.',
+    href: 'https://aliyas-guide-to-tokenomics.lovable.app/',
   },
 ]
 

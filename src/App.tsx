@@ -20,6 +20,7 @@ const Photography = lazy(() =>
     ),
   })),
 )
+const KnowledgeWork = lazy(() => import('@/components/KnowledgeWork').then((m) => ({ default: m.KnowledgeWork })))
 const Travel = lazy(() => import('@/components/Travel').then((m) => ({ default: m.Travel })))
 
 export default function App() {
@@ -33,6 +34,7 @@ export default function App() {
           <Route path="/account-signals" element={<ProjectPage><AccountSignals /></ProjectPage>} />
           <Route path="/mirorra" element={<ProjectPage><Mirorra /></ProjectPage>} />
           <Route path="/photography" element={<ProjectPage><Photography /></ProjectPage>} />
+          <Route path="/knowledge-work" element={<ProjectPage><KnowledgeWork /></ProjectPage>} />
           <Route path="/fora" element={<ProjectPage><Travel /></ProjectPage>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
