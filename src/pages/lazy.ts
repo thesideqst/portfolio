@@ -7,6 +7,7 @@ const pageLoaders: Record<string, () => Promise<unknown>> = {
   '/mirorra': () => import('@/components/Mirorra'),
   '/photography': () => import('@/components/Life'),
   '/fora': () => import('@/components/Travel'),
+  '/knowledge-work': () => import('@/components/KnowledgeWork'),
 }
 
 export function preloadPage(href: string) {
