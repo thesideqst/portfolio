@@ -13,6 +13,7 @@ export const links = {
   github: 'https://github.com/thesideqst',
   accountSignals: 'https://github.com/thesideqst/account-signals',
   accountSignalsApp: 'https://account-audio-briefing.lovable.app/',
+  jarfully: 'https://www.jarfully.app',
   instagram: 'https://www.instagram.com/lifeofaliya/',
   instagramHandle: 'lifeofaliya',
   // TODO: swap for Aliya's Fora advisor profile URL once she shares it.
@@ -260,6 +261,15 @@ export const projects: Project[] = [
       'Mirorra gives your closet a panel of AI stylists: upload a photo of any piece, and three critics, each with her own eye and vocabulary, debate whether it actually works on you (with better manners than most fashion-show judges).',
     ],
     more: { label: 'Meet the stylists', href: '/mirorra' },
+  },
+  {
+    slug: 'jarfully',
+    title: 'Jarfully',
+    image: '/media/covers/jarfully.jpg',
+    summary: [
+      'Every habit you keep drops a glass marble into a jar, where it bounces and settles with real physics, so your good days pile up somewhere you can actually see them (with a soft raga playing along, if you turn the sound on).',
+    ],
+    more: { label: 'Start a jar', href: links.jarfully },
   },
   {
     slug: 'photography',
